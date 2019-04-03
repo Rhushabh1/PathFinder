@@ -1,0 +1,27 @@
+#lang racket
+(require racket/mpair)
+(define INF 1000000)
+;;main program for A* algorithm
+
+;cell attributes except - i , j
+(struct cell (p-i p-j g h f)#:transparent #:mutable)
+
+;to be made as an HOF
+(define ROW 10)
+(define COL 10)
+
+;MAP containing obstacles (0 - obstacle)
+(define MAP (build-vector ROW (lambda (x) (make-vector COL 0))))
+
+;openlist having each element as '(f (cons i j))
+(define openList '())
+
+;2-d grid of boolean values (#t if cell is processed)
+(define closedList (build-vector ROW (lambda (x) (make-vector COL #f))))
+
+;contains 2-d grid of struct type - cell 
+(define cellDetails (build-vector ROW
+                                  (lambda (x) (make-vector COL
+                                                           (cell -1 -1 INF INF INF)))))
+
+(
