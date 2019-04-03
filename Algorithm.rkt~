@@ -1,16 +1,16 @@
 #lang racket
 ;;main program for A* algorithm
 
-(provide all-defined-out)
+(provide (all-defined-out))
 
 (require "examples.rkt")
-(require "trivial func.rkt")
+(require "trivial_func.rkt")
 (require racket/mpair)
 
 (define INF 1000000)
 
 ;cell attributes except - i , j
-(struct cell [p_i p_j g h f #:mutable] #:transparent )
+(struct cell (p_i p_j g h f ) #:transparent #:mutable)
 
 ;Global items------------------------------------------------------------------
 
@@ -39,6 +39,8 @@
 (define (vec-set! vec r c val)
   (vector-set! (vector-ref vec r) c val))
 
+;------------------------------------------------------------------------------
+
 ;traces path from dest to source
 (define (tracePath cellDetails dest)
 
@@ -57,7 +59,9 @@
 
   (begin
     (displayln "The path is :")
-    (printPath (parent-follower (car dest) (cdr dest) '()))))
+    (parent-follower (car dest) (cdr dest) '())))
+
+;-------------------------------------------------------------------------------
 
 ;main A* algo
 (define foundDest #f)
@@ -108,9 +112,21 @@
                         (cond [(isDestination i j dest) (begin
                                                           (set-cell-p_i! (vec-ref cellDetails i j) r)
                                                           (set-cell-p_j! (vec-ref cellDetails i j) c)
-                                                          (]
+                                                          (displayln "The destination cell is found")
+                                                          (tracePath cellDetails dest)
+                                                          (set! foundDest #t)
+                                                          (void 2))]
                               [(and (not (vec-ref closedList i j)) (isUnBlocked grid  i j))
-                               ]
+                               (let* ([g-new (+ 1 (cell-g (vec-ref cellDetails r c)))]
+                                      [h-new (calculateHValue i j dest)]
+                                      [f-new (+ g-new h-new)]
+                                      [CELL (vec-ref cellDetails i j)])
+                                 (if (or (equal? INF (cell-f CELL))
+                                         (> (cell-f CELL) f-new))
+                                     (begin
+                                       (set! openList (cons (list f-new i j) openList))
+                                       (vec-set! cellDetails i j (cell r c g-new h-new f-new)))
+                                     (void 3)))])
                         (void 1))
                     (successor r c (- iter 1))))]))
                   
