@@ -10,7 +10,7 @@
 (define INF 1000000)
 
 ;cell attributes except - i , j
-(struct cell (p_i p_j g h f)#:transparent #:mutable)
+(struct cell [p_i p_j g h f #:mutable] #:transparent )
 
 ;Global items------------------------------------------------------------------
 
@@ -95,14 +95,24 @@
                                 [(= iter 2) (- r 1)]
                                 [(= iter 1) (+ r 1)]
                                 [(= iter 0) (+ r 1)])]
-                       [j (cond [(= iter 7) r]
-                                [(= iter 6) r]
-                                [(= iter 5) (+ r 1)]
-                                [(= iter 4) r]
-                                [(= iter 3) (- r 1)]
-                                [(= iter 2) (- r 1)]
-                                [(= iter 1) (+ r 1)]
-                                [(= iter 0) (+ r 1)])]
+                       [j (cond [(= iter 7) c]
+                                [(= iter 6) c]
+                                [(= iter 5) (+ c 1)]
+                                [(= iter 4) (- c 1)]
+                                [(= iter 3) (+ c 1)]
+                                [(= iter 2) (- c 1)]
+                                [(= iter 1) (+ c 1)]
+                                [(= iter 0) (- c 1)])])
+                  (begin
+                    (if (isValid i j)
+                        (cond [(isDestination i j dest) (begin
+                                                          (set-cell-p_i! (vec-ref cellDetails i j) r)
+                                                          (set-cell-p_j! (vec-ref cellDetails i j) c)
+                                                          (]
+                              [(and (not (vec-ref closedList i j)) (isUnBlocked grid  i j))
+                               ]
+                        (void 1))
+                    (successor r c (- iter 1))))]))
                   
   
   (cond [(not (isValid (car src) (cdr src))) "Source is invalid"]
