@@ -1,11 +1,13 @@
 #lang racket
+(provide (all-defined-out))
+
 (define maps%
   (class object%
     (init-field ROW)
     (init-field COL)
     (init-field obstacles) ;list of coordinates of obstacles
     (super-new)
-    (define temp-vector (build-vector ROW (lambda (x) (make-vector COL 0))))
+    (define temp-vector (build-vector ROW (lambda (x) (make-vector COL 1))))
     (field [ MAP (build temp-vector obstacles ROW COL)])
     
     ))
@@ -24,7 +26,7 @@
     (define j 0)
     (define (iter)
       (if (> j (- COL 1)) (void 1)
-          (begin (if (check (cons i j) obstacle) (vector-set! row-vec j 1) (void 1))
+          (begin (if (check (cons i j) obstacle) (vector-set! row-vec j 0) (void 1))
                  (set! j (+ j 1))
                  (iter))))
     (iter))
@@ -44,7 +46,11 @@
 
 (define ex (build vec1 lst 5 5))
 
-(define ex1 (make-object maps% 8 8 lst))
+(define ex1 (make-object maps% 10 10 lst))
+
+(define lst2 (list (cons 1 5) (cons 4 2) (cons 7 9) (cons 2 3) (cons 5 8) (cons 4 4) (cons 3 2) (cons 0 1) (cons 2 2) (cons 2 1)
+                   (cons 5 3)))
+(define ex2 (make-object maps% 10 10 lst2))
 
 
   

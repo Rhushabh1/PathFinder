@@ -1,13 +1,15 @@
 #lang racket
 ;;main program for A* algorithm
 
-(provide (all-defined-out))
+
 
 (require "Examples.rkt")
-(require "Functions.rkt")
+(require  "Functions.rkt")
 (require racket/mpair)
 
-(define INF 1000000)
+(provide (all-defined-out))
+
+(define INF 999)
 
 ;cell attributes except - i , j
 (struct cell (p_i p_j g h f ) #:transparent #:mutable)
@@ -48,18 +50,20 @@
   (define (parent-follower r c acc)
     (let* ([p-r (cell-p_i (vec-ref cellDetails r c))]
            [p-c (cell-p_j (vec-ref cellDetails r c))])
-      (cond [(and (equal? p-r r) (equal? p-c c)) acc]
-            [else (parent-follower p-r p-c (cons (cons r c) acc))])))
+      (cond [(and (equal? p-r r) (equal? p-c c)) (cons (cons r c) acc)]
+            [else (parent-follower p-r p-c (cons (cons r c) acc))]))) 
 
   ;p = acc (of parent-follower)
   (define (printPath p)
+    (if (null? p) (begin (newline)(void 3))
     (begin
-      (displayln (car p))
-      (printPath (cdr p))))
+      (display (car p))
+      (display "-->")
+      (printPath (cdr p)))))
 
   (begin
     (displayln "The path is :")
-    (parent-follower (car dest) (cdr dest) '())))
+    (printPath (parent-follower (car dest) (cdr dest) '())))) 
 
 ;-------------------------------------------------------------------------------
 
@@ -70,13 +74,16 @@
 
   (define (looper)
     (cond [(null? openList) (if foundDest (void 1) "Failed to find the Destination Cell")]
-          [else (let* ([top (car openList)]
+          [else (let* ([sorted-open-list (sort openList (lambda (x y) (< (car x) (car y))))]
+                       [top (car sorted-open-list)]
                        [i (second top)]
                        [j (third top)])
                   (begin
-                    (set! openList (cdr openList))
+                    (set! openList (cdr sorted-open-list))
                     (vec-set! closedList i j #t)
-                    (successor i j 7)))]))
+                    (successor i j 7)
+                    (if foundDest (display "done")
+                        (looper))))])) 
 
 ;Cell-->Popped Cell (i, j) 
 ;        N -->  North       (i-1, j) 7
@@ -90,7 +97,7 @@
   
   ;iter = successor number
   (define (successor r c iter)
-    (cond [(= iter 0) (void 1)]
+    (cond [(= iter -1) (void 3)]
           [else (let* ([i (cond [(= iter 7) (- r 1)]
                                 [(= iter 6) (+ r 1)]
                                 [(= iter 5) r]
@@ -106,7 +113,7 @@
                                 [(= iter 3) (+ c 1)]
                                 [(= iter 2) (- c 1)]
                                 [(= iter 1) (+ c 1)]
-                                [(= iter 0) (- c 1)])])
+                                [(= iter 0) (- c 1)])]) 
                   (begin
                     (if (isValid i j)
                         (cond [(isDestination i j dest) (begin
@@ -115,8 +122,8 @@
                                                           (displayln "The destination cell is found")
                                                           (tracePath cellDetails dest)
                                                           (set! foundDest #t)
-                                                          (void 2))]
-                              [(and (not (vec-ref closedList i j)) (isUnBlocked grid  i j))
+                                                          (void 3))]
+                              [(and (not (vec-ref closedList i j)) (isUnblocked grid  i j))
                                (let* ([g-new (+ 1 (cell-g (vec-ref cellDetails r c)))]
                                       [h-new (calculateHValue i j dest)]
                                       [f-new (+ g-new h-new)]
@@ -126,9 +133,9 @@
                                      (begin
                                        (set! openList (cons (list f-new i j) openList))
                                        (vec-set! cellDetails i j (cell r c g-new h-new f-new)))
-                                     (void 3)))])
-                        (void 1))
-                    (successor r c (- iter 1))))]))
+                                     (successor r c (- iter 1))))])  
+                        (successor r c (- iter 1)))
+                    (if foundDest (void 3) (successor r c (- iter 1)))))]))
                   
   
   (cond [(not (isValid (car src) (cdr src))) "Source is invalid"]
@@ -145,11 +152,12 @@
 
 
 
+;(define my-grid (get-field MAP ex1))
+(define my-grid2 (get-field MAP ex2))
 
+;(define new-ins (aStarSearch my-grid (cons 0 0) (cons 6 7)))
 
-
-
-
+(define new2-ins (aStarSearch my-grid2 (cons 1 0) (cons 4 3)))
 
 
 
