@@ -1,38 +1,18 @@
 #lang racket
 ;;main program for A* algorithm
+
+
+
 (require "Examples.rkt")
+(require  "Functions.rkt")
 (require racket/mpair)
+
 (provide (all-defined-out))
 
-(define INF 99999)
+(define INF 999)
 
-;;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  ;Auxiliary functions
-(define (isValid row col)
-  (and (>= row 0) (>= col 0) (< row ROW) (< col COL)))
-
-
-(define (2d-vector-ref vec r c)
-  (vector-ref (vector-ref vec r) c))
-
-
-(define (isUnblocked grid row col)
-  (= (2d-vector-ref grid row col) 1)) ;;cell is unblocked when equal to 1 not 0
-
-(define (isDestination row col dest)
-  (and (= row (car dest)) (= col (cdr dest))))
-
-(define (calculateHValue row col dest)
-  (let ([x (- (car dest) row)]
-        [y (- (cdr dest) col)])
-    (sqrt (+ (* x x) (* y y)))))
-
-
-
-;;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 ;cell attributes except - i , j
 (struct cell (p_i p_j g h f ) #:transparent #:mutable)
-
 
 ;Global items------------------------------------------------------------------
 
