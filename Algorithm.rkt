@@ -62,7 +62,7 @@
   (vector-set! (vector-ref vec r) c val))
 
 ;------------------------------------------------------------------------------
-
+(define PATH '())
 ;traces path from dest to source
 (define (tracePath cellDetails dest)
 
@@ -82,8 +82,8 @@
       (printPath (cdr p)))))
 
   (begin
-    (displayln "The path is :")
-    (printPath (parent-follower (car dest) (cdr dest) '())))) 
+    ;(displayln "The path is :")
+    (parent-follower (car dest) (cdr dest) '()))) 
 
 ;-------------------------------------------------------------------------------
 
@@ -102,7 +102,7 @@
                     (set! openList (cdr sorted-open-list))
                     (vec-set! closedList i j #t)
                     (successor i j 7)
-                    (if foundDest (display "done")
+                    (if foundDest (void 1);(display "done")
                         (looper))))])) 
 
 ;Cell-->Popped Cell (i, j) 
@@ -139,8 +139,8 @@
                         (cond [(isDestination i j dest) (begin
                                                           (set-cell-p_i! (vec-ref cellDetails i j) r)
                                                           (set-cell-p_j! (vec-ref cellDetails i j) c)
-                                                          (displayln "The destination cell is found")
-                                                          (tracePath cellDetails dest)
+                                                          ;(displayln "The destination cell is found")
+                                                          (set! PATH (tracePath cellDetails dest))
                                                           (set! foundDest #t)
                                                           (void 3))]
                               [(and (not (vec-ref closedList i j)) (isUnblocked grid  i j))
@@ -173,11 +173,11 @@
 
 
 ;(define my-grid (get-field MAP ex1))
-(define my-grid2 (get-field MAP ex2))
-
-;(define new-ins (aStarSearch my-grid (cons 0 0) (cons 6 7)))
-
-(define new2-ins (aStarSearch my-grid2 (cons 1 0) (cons 4 3)))
+;;(define my-grid2 (get-field MAP ex2))
+;
+;(aStarSearch my-grid (cons 0 0) (cons 6 7))
+;
+;;(define new2-ins (aStarSearch my-grid2 (cons 1 0) (cons 4 3)))
 
 
 

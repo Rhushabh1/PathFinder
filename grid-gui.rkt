@@ -1,6 +1,8 @@
 #lang racket
 ;grid graphics
 
+(provide (all-defined-out))
+
 (require 2htdp/image)
 (require 2htdp/universe)
 (require lang/posn)
@@ -18,7 +20,7 @@
 
 (define initial-pic
   (place-images (list table
-                      red-sqr;-1
+                      red-sqr;1
                       blue-sqr;-2
                       yellow-sqr
                       (text "hello" 30 "orange"));-3
@@ -38,7 +40,7 @@
                                                                             (second w)
                                                                             r
                                                                             c)))]
-                                       [(and (>= x 725) (<= x 775)) (cond [(and (>= y 225) (<= y 275)) (list (car w) -1 (third w) (fourth w))]
+                                       [(and (>= x 725) (<= x 775)) (cond [(and (>= y 225) (<= y 275)) (list (car w) 1 (third w) (fourth w))]
                                                                           [(and (>= y 475) (<= y 525)) (list (car w) -2 (third w) (fourth w))]
                                                                           [(and (>= y 725) (<= y 775)) (list (car w) -3 (third w) (fourth w))]
                                                                           [else w])]
@@ -47,7 +49,7 @@
   
 (define (render-pic w)
   (let* ([iter (second w)]
-         [img (cond [(= iter -1) red-sqr]
+         [img (cond [(= iter 1) red-sqr]
                     [(= iter -2) blue-sqr]
                     [(= iter -3) yellow-sqr])]
          [i (+ 25 (* 50 (third w)))]
@@ -58,12 +60,8 @@
   (first w))
 
 ;(list image selected-sqr row column)
-(define bb (big-bang (list initial-pic -3 -1 -1)
-             [on-mouse mouse-pic]
-             [to-draw return-first]))
-grid
-
-
-
-;(big-bang initial-pic
-;  [to-draw (lambda (x) x)])
+(define (edit)
+  (define bb (big-bang (list initial-pic -3 -1 -1)
+               [on-mouse mouse-pic]
+               [to-draw return-first]))
+  grid)
