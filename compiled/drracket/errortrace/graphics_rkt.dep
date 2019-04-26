@@ -1,0 +1,1 @@
+("7.2" racket ("ca72d60d850436627906fe9a19ace2d05bd59db2" . "425dec6813b27ae8b843c4c569241ce985e8d5b4") (collects #"2htdp" #"image.rkt") (collects #"2htdp" #"planetcute.rkt") (collects #"2htdp" #"universe.rkt") (collects #"errortrace" #"errortrace-key.rkt") (collects #"lang" #"posn.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt"))

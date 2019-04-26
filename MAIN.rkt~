@@ -3,16 +3,13 @@
 
 (provide (all-defined-out))
 (require "Algorithm.rkt")
-;(require "graphics.rkt")
+(require "grid-gui.rkt")
 (require "home.rkt")
 ;----------------------------------------------------------------homepage
 ;(home)
 ;-----------------------------------------------------------------getting the data through gui
 (define GRID (home))
-(define dummy-grid GRID)
 (define list-of-obstacles '())
-(define initial-point '())
-(define end-point '())
 
 (define (flat-grid g)
   (define r-new -1)
@@ -28,15 +25,7 @@
                 (set! c-new (+ c 1))
                 (set! r-new r)))
           (let* ([res (vec-ref g r c)])
-            (cond [(= res 10) (begin
-                                (set! initial-point (cons r c))
-                                (vec-set! g r c 1)
-                                (flatten-grid g r-new c-new))]
-                  [(= res 11) (begin
-                                (set! end-point (cons r c))
-                                (vec-set! g r c 1)
-                                (flatten-grid g r-new c-new))]
-                  [(<= res 0) (begin
+            (cond [(<= res 0) (begin
                                (vec-set! g r c 0)
                                (set! list-of-obstacles (append list-of-obstacles (list (cons r c))))
                                (flatten-grid g r-new c-new))]
@@ -50,7 +39,7 @@
 (flat-grid GRID)
 ;-----------------------------------------------------------------finding the path
 
-(aStarSearch GRID initial-point end-point)
+(aStarSearch GRID (cons 0 0) (cons 6 7))
 ;PATH stores the shortest path
 ;---------------------------------------------------------------displaying the shortest path
 
