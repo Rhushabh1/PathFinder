@@ -12,8 +12,8 @@
 (define sqr-50 (rectangle 50 50 "solid" "red"))
 (define Scene (empty-scene 500 500))
 (define initial-pic
-  (place-images (list crop-scaled-grass
-                      crop-scaled-grass)
+  (place-images (list scaled-grass
+                      scaled-grass)
                 (list (make-posn 25 75);(+ 3 85/2))
                       (make-posn 35 45))
                 Scene))

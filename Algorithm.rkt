@@ -1,6 +1,7 @@
 #lang racket
 ;;main program for A* algorithm
 (require "Examples.rkt")
+(require "graphics.rkt")
 (require racket/mpair)
 (provide (all-defined-out))
 
@@ -37,8 +38,9 @@
 ;Global items------------------------------------------------------------------
 
 ;to be made as an HOF
-(define ROW 10)
-(define COL 10)
+;taking ROW and COL from graphics.rkt
+;(define ROW 10)
+;(define COL 10)
 
 ;openlist having each element as '(f i j)
 (define openList '())
@@ -172,15 +174,15 @@
 
 
 
-;(define my-grid (get-field MAP ex1))
-;;(define my-grid2 (get-field MAP ex2))
+(define my-grid (get-field MAP ex1))
+(define my-grid2 (get-field MAP ex2))
+
+(aStarSearch my-grid (cons 0 0) (cons 6 7))
+
+(define new2-ins (aStarSearch my-grid2 (cons 0 0) (cons 7 7)))
+
+
 ;
-;(aStarSearch my-grid (cons 0 0) (cons 6 7))
-;
-;;(define new2-ins (aStarSearch my-grid2 (cons 1 0) (cons 4 3)))
-
-
-
 
 
 

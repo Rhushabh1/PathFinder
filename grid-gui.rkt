@@ -9,11 +9,12 @@
 (require 2htdp/planetcute)
 
 (define grid (build-vector 10 (lambda (x) (make-vector 10 0))))
-(define Scene (square 1000 "solid" "white"))
-(define red-sqr (square 50 "solid" "red"))
-(define blue-sqr (square 50 "solid" "blue"))
-(define yellow-sqr (square 50 "solid" "yellow"))
-(define table (square 500 "solid" "yellow"));initial grid (all yellow)
+(define Scene (frame (square 1000 "solid" "white")))
+(define red-sqr (frame (square 50 "solid" "red")))
+(define blue-sqr (frame (square 50 "solid" "blue")))
+(define yellow-sqr (frame (square 50 "solid" "yellow")))
+(define table (frame (square 500 "solid" "yellow")));initial grid (all yellow)
+
 
 (define (2d-vector-set! vec r c val)
   (vector-set! (vector-ref vec r) c val))
