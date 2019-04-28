@@ -95,7 +95,7 @@
 (define (aStarSearch grid src dest)
 
   (define (looper)
-    (cond [(null? openList) (if foundDest (void 1) "Failed to find the Destination Cell")]
+    (cond [(null? openList) (if foundDest "found" "Failed to find the Destination Cell")]
           [else (let* ([sorted-open-list (sort openList (lambda (x y) (< (car x) (car y))))]
                        [top (car sorted-open-list)]
                        [i (second top)]
@@ -104,7 +104,7 @@
                     (set! openList (cdr sorted-open-list))
                     (vec-set! closedList j i #t)
                     (successor i j 7)
-                    (if foundDest (void 1);(display "done")
+                    (if foundDest "found";(display "done")
                         (looper))))])) 
 
 ;Cell-->Popped Cell (i, j) 
