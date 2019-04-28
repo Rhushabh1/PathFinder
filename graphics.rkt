@@ -6,6 +6,7 @@
 (require 2htdp/universe)
 (require lang/posn)
 (require 2htdp/planetcute)
+(require "photos.rkt")
 
 ;(define (render lst)
 ;  (place-image (circle (car lst)  "solid" "blue") (second lst) (third lst) (empty-scene 500 500)))
@@ -22,6 +23,8 @@
 ;        [else w]))
 ;
 
+
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 (define start-button (bitmap "graphics-start.png"))
 
@@ -57,8 +60,8 @@
 
 (define boundry-length-x 800)
 (define boundry-length-y 800)
-(define ROW 40)
-(define COL 40)
+(define ROW 20)
+(define COL 20)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define SIZE (/ boundry-length-x ROW))
 
@@ -68,18 +71,37 @@
 
 (define grid (build-vector ROW (lambda (x) (make-vector COL 1))))
 
-(define table (frame (square 800 "solid" "white")))
+;(define table (frame (square 800 "solid" "white")))
 
-(define red-sqr (frame (square 50 "solid" "red")))
-(define blue-sqr (frame (square 50 "solid" "blue")))
-(define yellow-sqr (frame (square 50 "solid" "yellow")))
-(define white-sqr (frame (square 50 "solid" "white")))
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+(define (grassland w)
+
+  (define img (scale/xy (/ SIZE 50) (/ SIZE 50) cs-grass-block))
+    
+  (define scene (empty-scene w w "white"))
+
+  (define (f x y image); x=10 , y=10 
+    (begin
+      (set! scene (place-image image x y scene))
+      (let* ([boundary (- 800 (/ SIZE 2))]
+             [y-new (if (= x boundary) (+ y SIZE) y)]
+             [x-new (if (= x boundary) (/ SIZE 2) (+ x SIZE))])
+        (if (and (>= x boundary) (>= y boundary)) scene (f x-new y-new image)))))
+    
+  (f (/ SIZE 2) (/ SIZE 2) img))
+
+(define table (grassland 800))
+
+(define red-sqr cs-yellow-star)
+(define blue-sqr cs-character-boy)
+(define yellow-sqr cs-stone-block)
+(define white-sqr cs-grass-block)
 
 
-(define red-box (circle (/ SIZE 2) "solid" "red"))
-(define blue-box  (circle (/ SIZE 2) "solid" "blue"))
-(define yellow-box (frame (square SIZE "solid" "yellow")))
-(define white-box  (square SIZE "solid" "white"))
+(define red-box (scale/xy (/ SIZE 50) (/ SIZE 50) cs-yellow-star))
+(define blue-box (scale/xy (/ SIZE 50) (/ SIZE 50) cs-character-boy))
+(define yellow-box (scale/xy (/ SIZE 50) (/ SIZE 50) cs-stone-block))
+(define white-box (scale/xy (/ SIZE 50) (/ SIZE 50) cs-grass-block))
 
 (define margin-x 100)
 (define margin-y 100)
