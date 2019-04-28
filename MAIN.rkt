@@ -89,7 +89,7 @@
                  [on-tick draw-path 0.5]
                  [to-draw car]
                  [stop-when  last-world?]
-                 [close-on-stop 1]
+                 ;[close-on-stop 1]
                  ))
                  
 
@@ -101,7 +101,7 @@
 
 
 
-
+ 
 ;GRID is now flattened and ready to be given to algo
 
 ;-----------------------------------------------------------------finding the path
@@ -117,11 +117,16 @@
                                ;    [(equal? 'graphics state1) (begin (bb))]))
                                    [(equal? 'graphics state1) (begin (let ([world-state1 (bb)])
                                                                        (set! world-state world-state1))
+                                                                     (set! gr grid)
                                                                      (flat-grid gr)
-                                                                     (astar)
+                                                                     (define val (astar))
                                                                      ;w(set! path-coordinates PATH)
                                                                      (set! picture (car world-state))
-                                                                     (path))]))
+                                                                     (if (equal? val "found") (path)
+                                                                         (cons val (path)))
+                                                                     ;(path)
+                                                                    ; val
+                                                                     )]))
                                                                      
 
 
