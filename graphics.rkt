@@ -24,6 +24,25 @@
 
 
 (define start-button (bitmap "graphics-start.png"))
+
+(define template1help  (bitmap "template1.png") )
+(define template-height-h (image-height template1help))
+(define template-width-h (image-width template1help))
+
+(define template1h (scale/xy (/ 80 262) (/ 40 75) (bitmap "template1.png") ))
+
+(define template-height (image-height template1h))
+(define template-width (image-width template1h))
+
+(define template1 (scale/xy (/ 80 template-width-h) (/ 40  template-height-h)  (bitmap "template1.png")))
+(define template2 (scale/xy (/ 80 template-width-h) (/ 40  template-height-h) (bitmap "template2.png")))
+(define template3 (scale/xy (/ 80 template-width-h) (/ 40  template-height-h) (bitmap "template3.png")))
+(define template4 (scale/xy (/ 80 template-width-h) (/ 40  template-height-h) (bitmap "template4.png")))
+(define template5 (scale/xy (/ 80 template-width-h) (/ 40  template-height-h) (bitmap "template5.png")))
+
+
+
+
 (define background2 (scale/xy (/ 1500 1024) (/ 1000 570) (bitmap "graphics-background2.png")))
 (define background1 (scale/xy (/ 1500 800) (/ 1000 441) (bitmap "graphics-background1.jpg")))
 
@@ -56,8 +75,9 @@
 (define yellow-sqr (frame (square 50 "solid" "yellow")))
 (define white-sqr (frame (square 50 "solid" "white")))
 
-(define red-box (frame (square SIZE "solid" "red")))
-(define blue-box (frame (square SIZE "solid" "blue")))
+
+(define red-box (circle (/ SIZE 2) "solid" "red"))
+(define blue-box  (circle (/ SIZE 2) "solid" "blue"))
 (define yellow-box (frame (square SIZE "solid" "yellow")))
 (define white-box  (square SIZE "solid" "white"))
 
@@ -78,6 +98,18 @@
 (define button-pos-white-y 650)
 (define button-pos-start-x 1350)
 (define button-pos-start-y 800)
+
+(define button-pos-template1-x 90)
+(define button-pos-template1-y 950)
+(define button-pos-template2-x 180)
+(define button-pos-template2-y 950)
+(define button-pos-template3-x 270)
+(define button-pos-template3-y 950)
+(define button-pos-template4-x 360)
+(define button-pos-template4-y 950)
+(define button-pos-template5-x 450)
+(define button-pos-template5-y 950)
+
 
 (define text-red-x 1350)
 (define text-red-y 250)
@@ -191,6 +223,34 @@
   
 (define (in-button-start-y y)
   (and (>= y (- button-pos-start-y (/ (image-height start-button) 2))) (<= y (+ button-pos-start-y (/ (image-height start-button) 2)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define (in-button-template1-x x)
+  (and (>= x (- button-pos-template1-x (/ template-width 2))) (<= x (+ button-pos-template1-x (/ template-width 2)))))  
+(define (in-button-template1-y y)
+  (and (>= y (- button-pos-template1-y (/ template-height 2))) (<= y (+ button-pos-template1-y (/ template-height 2)))))
+
+(define (in-button-template2-x x)
+  (and (>= x (- button-pos-template2-x (/ template-width 2))) (<= x (+ button-pos-template2-x (/ template-width 2)))))
+(define (in-button-template2-y y)
+  (and (>= y (- button-pos-template2-y (/ template-height 2))) (<= y (+ button-pos-template2-y (/ template-height 2)))))
+
+
+(define (in-button-template3-x x)
+  (and (>= x (- button-pos-template3-x (/ template-width 2))) (<= x (+ button-pos-template3-x (/ template-width 2)))))
+(define (in-button-template3-y y)
+  (and (>= y (- button-pos-template3-y (/ template-height 2))) (<= y (+ button-pos-template3-y (/ template-height 2)))))
+
+(define (in-button-template4-x x)
+  (and (>= x (- button-pos-template4-x (/ template-width 2))) (<= x (+ button-pos-template4-x (/ template-width 2)))))
+(define (in-button-template4-y y)
+  (and (>= y (- button-pos-template4-y (/ template-height 2))) (<= y (+ button-pos-template4-y (/ template-height 2)))))
+
+(define (in-button-template5-x x)
+  (and (>= x (- button-pos-template5-x (/ template-width 2))) (<= x (+ button-pos-template5-x (/ template-width 2)))))
+(define (in-button-template5-y y)
+  (and (>= y (- button-pos-template5-y (/ template-height 2))) (<= y (+ button-pos-template5-y (/ template-height 2)))))
  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   
@@ -200,6 +260,16 @@
        [(and (in-button-yellow-x x) (in-button-yellow-y y)) (lambda(w) (list (car w) -3 (third w) (fourth w)))]
        [(and (in-button-white-x x) (in-button-white-y y)) (lambda(w) (list (car w) 1 (third w) (fourth w)))]
        [(and (in-button-start-x x) (in-button-start-y y)) (lambda(w) (list (car w) -4 (third w) (fourth w)))]
+       [(and (in-button-template1-x x) (in-button-template1-y y)) (lambda(w) (begin (set! grid template1-grid)
+                                                                               (list template1-image (second w) (third w) (fourth w))))]
+       [(and (in-button-template2-x x) (in-button-template2-y y)) (lambda(w) (begin (set! grid template2-grid)
+                                                                               (list template2-image (second w) (third w) (fourth w))))]
+       [(and (in-button-template3-x x) (in-button-template3-y y)) (lambda(w) (begin (set! grid template3-grid)
+                                                                               (list template3-image (second w) (third w) (fourth w))))]
+       [(and (in-button-template4-x x) (in-button-template4-y y)) (lambda(w) (begin (set! grid template4-grid)
+                                                                               (list template4-image (second w) (third w) (fourth w))))]
+       [(and (in-button-template5-x x) (in-button-template5-y y)) (lambda(w) (begin (set! grid template5-grid)
+                                                                               (list template5-image (second w) (third w) (fourth w))))]
         [else #f]))
 
                
@@ -213,6 +283,11 @@
                       (text "CHOOSE-INITIAL_POINT" 15 "purple" )
                       (text "CHOOSE-FINAL_POINT" 15 "purple" )
                       (text "UNDO" 15 "purple" )
+                      template1
+                      template2
+                      template3
+                      template4
+                      template5
                       start-button
                       );-3
                 (list (make-posn (+ margin-x (/ boundry-length-x 2)) (+ margin-y (/ boundry-length-y 2)  ))
@@ -224,6 +299,13 @@
                       (make-posn text-blue-x text-blue-y)
                       (make-posn text-red-x text-red-y)
                       (make-posn text-white-x text-white-y)
+                      
+                      (make-posn button-pos-template1-x button-pos-template1-y)
+                      (make-posn button-pos-template2-x button-pos-template2-y)
+                      (make-posn button-pos-template3-x button-pos-template3-y)
+                      (make-posn button-pos-template4-x button-pos-template4-y)
+                      (make-posn button-pos-template5-x button-pos-template5-y)
+                      
                       (make-posn button-pos-start-x button-pos-start-y))
                 SCENE))
 
@@ -279,5 +361,106 @@
 
 
 (define w1 initial-pic)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;template-func;;;;;;;;;;;;;;;;
+(define (check-grid pair grid)
+ (vector-ref  (vector-ref grid (car pair)) (cdr pair)))
+;
+;
+;(define (template-generator in-grid pic)
+;  (define i 0)
+;  
+;  (define (row-build row-vec ) (displayln row-vec)
+;    (define j 0)
+;    (define (iter)
+;      (if (> j (- COL 1)) (void 1)
+;          (begin (set! pic (let* ([iter (check (cons i j) in-grid)]
+;                                  [img (cond [(= iter -1) red-box]
+;                                             [(= iter -2) blue-box]
+;                                             [(= iter -3) yellow-box]
+;                                             [(= iter 1) white-box])]
+;                                  [p (+ margin-x (+ (/ SIZE 2) (* SIZE i)))]
+;                                  [q (+ margin-y (+ (/ SIZE 2) (* SIZE j)))])
+;                             (place-image img i j pic)))
+;                 (set! j (+ j 1))
+;                 (iter)
+;                 )))
+;    
+;    (iter))
+;   (define (iter1)
+;    (if (> i (- ROW 1)) (void 1) 
+;        (begin (row-build (vector-ref  in-grid i))
+;               (set! i (+ i 1))
+;               (iter1))))
+;  (begin (iter1)
+;         ) ;return updated vec
+;  )
+(define (update i j pic)
+  (let (
+        [p (+ margin-x (+ (/ SIZE 2) (* SIZE i)))]
+        [q (+ margin-y (+ (/ SIZE 2) (* SIZE j)))])
+    (place-image yellow-box q p pic)))
+
+(define (template-generator i j grid-i pic)
+  
+  (cond [(and (= j  (sub1 COL)) (= i (sub1 ROW))) (update i j pic)]
+        [(< j (sub1 COL)) (cond [(= -3 (check-grid (cons i j) grid-i)) (template-generator i (+ 1 j) grid-i (update i j pic))]
+                                 [else (template-generator i (+ j 1) grid-i pic)])]
+        [(= j (sub1 COL)) (cond [(= -3 (check-grid (cons i j) grid-i)) (template-generator (+ i 1) 0 grid-i (update i j pic))]
+                                 [else (template-generator (+ i 1) 0 grid-i pic)])]))
+
+                                  
+        
+
+
+;(define template1-grid (vector  (vector -3 1 1 1 -3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1)
+;   (vector -3 1 1 1 -3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1)
+;   (vector -3 1 1 1 -3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1)
+;  (vector  -3 1 -3 1 -3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1)
+;  (vector   -3 1 -3 1 -3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1)
+;  (vector   -3 1 -3 1 -3 1 1 1 1 1 1 1 1 1 1 1 -3 -3 1 1)
+;  (vector   -3 1 1 1 -3 1 1 1 1 1 1 1 1 1 1 -3 1 -3 1 1)
+;  (vector   -3 1 -3 1 -3 -3 -3 1 1 1 1 1 1 -3 -3 1 1 1 1 1)
+; (vector    -3 1 -3 1 1 -3 1 -3 1 1 1 1 -3 1 1 1 1 1 1 1)
+;  (vector   -3 1 -3 1 1 1 1 1 1 1 1 -3 1 1 1 1 1 1 1 1)
+;  (vector   1 1 1 -3 1 1 1 -3 1 1 1 1 -3 1 1 1 1 1 1 1)
+;  (vector   1 1 -3 -3 1 1 1 -3 1 1 1 1 1 1 1 1 1 1 1 1)
+; (vector    1 1 -3 -3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1)
+; (vector    1 1 1 -3 1 1 1 -3 1 1 1 1 1 1 1 1 1 1 1 1)
+; (vector    1 1 1 -3 1 1 1 -3 1 1 1 1 1 1 1 1 1 1 1 1)
+; (vector    1 1 1 -3 1 1 1 -3 1 1 1 1 1 1 1 1 1 1 1 1)
+;  (vector   1 1 1 -3 1 1 1 -3 1 1 1 1 1 1 1 1 1 1 1 1)
+;  (vector   1 1 1 -3 1 1 1 -3 1 -3 1 1 1 1 1 1 1 1 1 1)
+; (vector    1 1 1 -3 1 1 1 1 -3 1 1 1 1 1 1 1 1 1 1 1)
+;  (vector   1 1 1 -3 1 1 1 1 -3 -3 1 1 1 1 1 1 1 1 1 1)))
+
+(define (my-rand)
+  (let ([x (random 4)])
+    (cond [(= 0 x) 1]
+          [(= 2 x) 1]
+          [(= 3 x) 1]
+          [(= 1 x) -3])))
+(define (make-rand-vector COL)
+  (cond [(= COL 0) #()]
+        [else (vector-append (vector (my-rand)) (make-rand-vector (- COL 1)))]))
+
+(define template1-grid (build-vector ROW (lambda (x) (make-rand-vector COL))))
+(define template2-grid (build-vector ROW (lambda (x) (make-rand-vector COL))))
+(define template3-grid (build-vector ROW (lambda (x) (make-rand-vector COL))))
+(define template4-grid (build-vector ROW (lambda (x) (make-rand-vector COL))))
+(define template5-grid (build-vector ROW (lambda (x) (make-rand-vector COL))))
+
+(define template1-image (template-generator 0 0 template1-grid initial-pic))
+(define template2-image (template-generator 0 0 template2-grid initial-pic))
+(define template3-image (template-generator 0 0 template3-grid initial-pic))
+(define template4-image (template-generator 0 0 template4-grid initial-pic))
+(define template5-image (template-generator 0 0 template5-grid initial-pic))
+;;;;;;
+
+
+
+
+
 
 
