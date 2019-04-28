@@ -38,8 +38,8 @@
 
 (define boundry-length-x 800)
 (define boundry-length-y 800)
-(define ROW 20)
-(define COL 20)
+(define ROW 40)
+(define COL 40)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define SIZE (/ boundry-length-x ROW))
 
