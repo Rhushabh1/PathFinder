@@ -1,5 +1,6 @@
 #lang racket
 
+(provide (all-defined-out))
 (require 2htdp/image)
 (require 2htdp/universe)
 (require lang/posn)
@@ -164,8 +165,8 @@
   
 (define (button-range x y)
   (cond [(and (in-button-red-x x) (in-button-red-y y)) (lambda(w) (list (car w) -1 (third w) (fourth w)))]
-        [(and (in-button-blue-x x) (in-button-blue-y y)) (lambda(w) (list (car w) -2 (third w) (fourth w)))]
-       [(and (in-button-yellow-x x) (in-button-yellow-y y)) (lambda(w) (list (car w) -3 (third w) (fourth w)))]
+        [(and (in-button-blue-x x) (in-button-blue-y y)) (lambda(w) (list (car w) 10 (third w) (fourth w)))]
+       [(and (in-button-yellow-x x) (in-button-yellow-y y)) (lambda(w) (list (car w) 11 (third w) (fourth w)))]
         [else #f]))
 
                
@@ -205,8 +206,8 @@
 (define (render-pic w)
   (let* ([iter (second w)]
          [img (cond [(= iter -1) red-box]
-                    [(= iter -2) blue-box]
-                    [(= iter -3) yellow-box])]
+                    [(= iter 10) blue-box]
+                    [(= iter 11) yellow-box])]
          [i (+ margin-x (+ (/ SIZE 2) (* SIZE (third w))))]
          [j (+ margin-y (+ (/ SIZE 2) (* SIZE (fourth w))))])
     (place-image img i j (first w))))
@@ -215,9 +216,10 @@
   (first w))
 
 ;(list image selected-sqr row column)
-(define (bb) (big-bang (list initial-pic -3 -1 -1)
-             [on-mouse mouse-pic]
-             [to-draw return-first]))
+(define (bb) (define intermediate (big-bang (list initial-pic -3 -1 -1)
+                                    [on-mouse mouse-pic]
+                                    [to-draw return-first]))
+  grid)
 
 
 
