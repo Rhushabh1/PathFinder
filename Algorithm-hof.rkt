@@ -138,7 +138,7 @@
                                       [successor-cell-val (vec-ref grid j i)]
                                       [avg (/ (+ parent-cell-val successor-cell-val) 2)]
                                       [g-new (+ avg (cell-g (vec-ref cellDetails r c)))]
-                                      [h-new (* avg (calculateHValue j i dest))]
+                                      [h-new (calculateHValue j i dest)]
                                       [f-new (+ g-new h-new)]
                                       [CELL (vec-ref cellDetails j i)])
                                  (if (or (equal? INF (cell-f CELL))
