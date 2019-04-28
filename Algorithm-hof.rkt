@@ -104,7 +104,8 @@
 ;        N.W--> North-West  (i-1, j-1) 2
 ;        S.E--> South-East  (i+1, j+1) 1
 ;        S.W--> South-West  (i+1, j-1) 0
-  
+
+  ;diagonal cells - (3,2,1,0)
   ;iter = successor number
   (define (successor c r iter);c-i,r-j
     (cond [(= iter -1) (void 3)]
@@ -136,7 +137,9 @@
                               [(and (not (vec-ref closedList j i)) (isUnblocked grid j i))
                                (let* ([parent-cell-val (vec-ref grid r c)]
                                       [successor-cell-val (vec-ref grid j i)]
-                                      [avg (/ (+ parent-cell-val successor-cell-val) 2)]
+                                      [avg-simple (/ (+ parent-cell-val successor-cell-val) 2)]
+                                      [avg (if (and (<= iter 3) (>= iter 0)) (* (sqrt 2) avg-simple)
+                                               avg-simple)]
                                       [g-new (+ avg (cell-g (vec-ref cellDetails r c)))]
                                       [h-new (calculateHValue j i dest)]
                                       [f-new (+ g-new h-new)]
