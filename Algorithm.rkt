@@ -1,6 +1,7 @@
 #lang racket
 ;;main program for A* algorithm
 (require "Examples.rkt")
+(require "graphics.rkt")
 (require racket/mpair)
 (provide (all-defined-out))
 
@@ -20,11 +21,11 @@
   (= (2d-vector-ref grid row col) 1)) ;;cell is unblocked when equal to 1 not 0
 
 (define (isDestination row col dest)
-  (and (= row (car dest)) (= col (cdr dest))))
+  (and (= row (cdr dest)) (= col (car dest))))
 
 (define (calculateHValue row col dest)
-  (let ([x (- (car dest) row)]
-        [y (- (cdr dest) col)])
+  (let ([x (- (cdr dest) row)]
+        [y (- (car dest) col)])
     (sqrt (+ (* x x) (* y y)))))
 
 
@@ -37,8 +38,9 @@
 ;Global items------------------------------------------------------------------
 
 ;to be made as an HOF
-(define ROW 10)
-(define COL 10)
+;taking ROW and COL from graphics.rkt
+;(define ROW 10)
+;(define COL 10)
 
 ;openlist having each element as '(f i j)
 (define openList '())
@@ -54,8 +56,8 @@
 ;functions------------------------------------------------------------------
 
 ;goto (i j) coordinates of vec
-(define (vec-ref vec i j)
-  (vector-ref (vector-ref vec i) j))
+(define (vec-ref vec r c)
+  (vector-ref (vector-ref vec r) c))
 
 ;set vec
 (define (vec-set! vec r c val)
@@ -67,11 +69,11 @@
 (define (tracePath cellDetails dest)
 
   ;initialise acc = '() 
-  (define (parent-follower r c acc)
-    (let* ([p-r (cell-p_i (vec-ref cellDetails r c))]
-           [p-c (cell-p_j (vec-ref cellDetails r c))])
-      (cond [(and (equal? p-r r) (equal? p-c c)) (cons (cons r c) acc)]
-            [else (parent-follower p-r p-c (cons (cons r c) acc))]))) 
+  (define (parent-follower i j acc)
+    (let* ([p-i (cell-p_i (vec-ref cellDetails j i))]
+           [p-j (cell-p_j (vec-ref cellDetails j i))])
+      (cond [(and (equal? p-i i) (equal? p-j j)) (cons (cons i j) acc)]
+            [else (parent-follower p-i p-j (cons (cons i j) acc))]))) 
 
   ;p = acc (of parent-follower)
   (define (printPath p)
@@ -83,7 +85,7 @@
 
   (begin
     ;(displayln "The path is :")
-    (parent-follower (car dest) (cdr dest) '()))) 
+    (parent-follower (car dest) (cdr dest) '())));car-i,cdr-j
 
 ;-------------------------------------------------------------------------------
 
@@ -100,7 +102,7 @@
                        [j (third top)])
                   (begin
                     (set! openList (cdr sorted-open-list))
-                    (vec-set! closedList i j #t)
+                    (vec-set! closedList j i #t)
                     (successor i j 7)
                     (if foundDest (void 1);(display "done")
                         (looper))))])) 
@@ -116,70 +118,66 @@
 ;        S.W--> South-West  (i+1, j-1) 0
   
   ;iter = successor number
-  (define (successor r c iter)
+  (define (successor c r iter);c-i,r-j
     (cond [(= iter -1) (void 3)]
-          [else (let* ([i (cond [(= iter 7) (- r 1)]
-                                [(= iter 6) (+ r 1)]
-                                [(= iter 5) r]
-                                [(= iter 4) r]
-                                [(= iter 3) (- r 1)]
-                                [(= iter 2) (- r 1)]
-                                [(= iter 1) (+ r 1)]
-                                [(= iter 0) (+ r 1)])]
-                       [j (cond [(= iter 7) c]
-                                [(= iter 6) c]
-                                [(= iter 5) (+ c 1)]
-                                [(= iter 4) (- c 1)]
-                                [(= iter 3) (+ c 1)]
+          [else (let* ([i (cond [(= iter 7) (- c 1)]
+                                [(= iter 6) (+ c 1)]
+                                [(= iter 5) c]
+                                [(= iter 4) c]
+                                [(= iter 3) (- c 1)]
                                 [(= iter 2) (- c 1)]
                                 [(= iter 1) (+ c 1)]
-                                [(= iter 0) (- c 1)])]) 
+                                [(= iter 0) (+ c 1)])]
+                       [j (cond [(= iter 7) r]
+                                [(= iter 6) r]
+                                [(= iter 5) (+ r 1)]
+                                [(= iter 4) (- r 1)]
+                                [(= iter 3) (+ r 1)]
+                                [(= iter 2) (- r 1)]
+                                [(= iter 1) (+ r 1)]
+                                [(= iter 0) (- r 1)])]) 
                   (begin
-                    (if (isValid i j)
-                        (cond [(isDestination i j dest) (begin
-                                                          (set-cell-p_i! (vec-ref cellDetails i j) r)
-                                                          (set-cell-p_j! (vec-ref cellDetails i j) c)
+                    (if (isValid j i)
+                        (cond [(isDestination j i dest) (begin
+                                                          (set-cell-p_i! (vec-ref cellDetails j i) c)
+                                                          (set-cell-p_j! (vec-ref cellDetails j i) r)
                                                           ;(displayln "The destination cell is found")
                                                           (set! PATH (tracePath cellDetails dest))
                                                           (set! foundDest #t)
                                                           (void 3))]
-                              [(and (not (vec-ref closedList i j)) (isUnblocked grid  i j))
+                              [(and (not (vec-ref closedList j i)) (isUnblocked grid j i))
                                (let* ([g-new (+ 1 (cell-g (vec-ref cellDetails r c)))]
-                                      [h-new (calculateHValue i j dest)]
+                                      [h-new (calculateHValue j i dest)]
                                       [f-new (+ g-new h-new)]
-                                      [CELL (vec-ref cellDetails i j)])
+                                      [CELL (vec-ref cellDetails j i)])
                                  (if (or (equal? INF (cell-f CELL))
                                          (> (cell-f CELL) f-new))
                                      (begin
                                        (set! openList (cons (list f-new i j) openList))
-                                       (vec-set! cellDetails i j (cell r c g-new h-new f-new)))
-                                     (successor r c (- iter 1))))])  
-                        (successor r c (- iter 1)))
-                    (if foundDest (void 3) (successor r c (- iter 1)))))]))
+                                       (vec-set! cellDetails j i (cell c r g-new h-new f-new)))
+                                     (successor c r (- iter 1))))])  
+                        (successor c r (- iter 1)))
+                    (if foundDest (void 3) (successor c r (- iter 1)))))]))
                   
-  
-  (cond [(not (isValid (car src) (cdr src))) "Source is invalid"]
-        [(not (isValid (car dest) (cdr dest))) "Destination is invalid"]
-        [(not (or (isUnblocked grid (car src) (cdr src))
-                  (isUnblocked grid (car dest) (cdr dest)))) "Source or the destination is blocked"]
-        [(isDestination (car src) (cdr src) dest) "We are already at the destination"]
+  ;car-i-COL, cdr-j-ROW
+  (cond [(not (isValid (cdr src) (car src))) "Source is invalid"]
+        [(not (isValid (cdr dest) (car dest))) "Destination is invalid"]
+        [(not (or (isUnblocked grid (cdr src) (car src))
+                  (isUnblocked grid (cdr dest) (car dest)))) "Source or the destination is blocked"]
+        [(isDestination (cdr src) (car src) dest) "We are already at the destination"]
         [else (let* ([i (car src)]
                      [j (cdr src)])
                 (begin
-                  (vec-set! cellDetails i j (cell i j 0.0 0.0 0.0))
+                  (vec-set! cellDetails j i (cell i j 0.0 0.0 0.0))
                   (set! openList (cons (list 0.0 i j) openList))
                   (looper)))]))
 
 
 
 ;(define my-grid (get-field MAP ex1))
-;;(define my-grid2 (get-field MAP ex2))
-;
+;(define my-grid2 (get-field MAP ex2))
 ;(aStarSearch my-grid (cons 0 0) (cons 6 7))
-;
-;;(define new2-ins (aStarSearch my-grid2 (cons 1 0) (cons 4 3)))
-
-
+;(define new2-ins (aStarSearch my-grid2 (cons 0 0) (cons 7 7)))
 
 
 

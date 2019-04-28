@@ -6,7 +6,7 @@
 (require lang/posn)
 (require 2htdp/planetcute)
 (require "graphics.rkt")
-(require "MAIN.rkt")
+;(require "MAIN.rkt")
 ;;w1
 (define picture w1)
 (define path-coordinates (list (cons 1 1) (cons 3 4) (cons 13 2) (cons 8 9) (cons 11 19)))
