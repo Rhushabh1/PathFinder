@@ -3,11 +3,11 @@
 This project aims at depicting the path-finding and navigation systems used in Google Maps, Ola, Uber, etc.  
 
 Firstly, we worked on the algorithm, which is the heart of this project.
-For this we implemented A* algorithm - modification of the famous Dijkstra Algorithm
+For this we implemented A* algorithm - modification of the famous Dijkstra Algorithm.
 
 Secondly, we worked on the GUI.
 It was very minimal at first, just some colored blocks in the starting.
-Now we have improved the image quality and more attractive
+Now we have improved the image quality and made it look more attractive.
 
-At last but not the least, we imtegrated the algorithm and GUI subsystems into one MAIN.rkt file.
+At last but not the least, we integrated the algorithm and GUI subsystems into one MAIN.rkt file.
 Feel free to try it out (:D)
