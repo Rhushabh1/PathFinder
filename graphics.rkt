@@ -6,7 +6,9 @@
 (require 2htdp/universe)
 (require lang/posn)
 (require 2htdp/planetcute)
-(require "input.rkt")
+(require "photos.rkt")
+(require "sound.rkt")
+;(require "input.rkt")
 
 ;(define (render lst)
 ;  (place-image (circle (car lst)  "solid" "blue") (second lst) (third lst) (empty-scene 500 500)))
@@ -23,6 +25,8 @@
 ;        [else w]))
 ;
 
+
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 (define start-button (bitmap "graphics-start.png"))
 
@@ -46,7 +50,8 @@
 
 (define background2 (scale/xy (/ 1500 1024) (/ 1000 570) (bitmap "graphics-background2.png")))
 (define background1 (scale/xy (/ 1500 800) (/ 1000 441) (bitmap "graphics-background1.jpg")))
-
+(define background3 (scale/xy (/ 1500 1200) (/ 1000 675) (bitmap "village.jpg")))
+(define background4 (scale/xy (/ 1500 564) (/ 1000 334) (bitmap "village-3.jpg")))
 
 (define (2d-vector-set! vec r c val)
   (vector-set! (vector-ref vec r) c val))
@@ -56,41 +61,92 @@
 ;  (on-mouse act-mouse))
 ;
 
-(define boundry-length-x 800)
-(define boundry-length-y 800)
+(define boundry-length-x 890)
+(define boundry-length-y 890)
 
-(define ROW 20)
-(define COL 20)
+(define (take-row)
+  (displayln "Enter dimension of map")
+  (read))
 
-(define (row-col-set)
-  (set! ROW row)
-  (set! COL col))
+;(define (take-column)
+;  (displayln "Enter no of column")
+;  (read))
+
+
+(define DIM (take-row))
+
+(define ROW DIM)
+(define COL DIM)
+;(define ROW row)
+;(define COL col)
+
+;(define (row-col-set)
+;  (set! ROW row)
+;  (set! COL col))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define SIZE (/ boundry-length-x ROW))
 
-(define SCENE (frame background2))
+(define SCENE (frame background4))
                ;(rectangle  1500 1000 "solid" "white")))
 
 
 (define grid (build-vector ROW (lambda (x) (make-vector COL 1))))
 
-(define table (frame (square 800 "solid" "white")))
+;(define table (frame (square 800 "solid" "white")))
 
-(define red-sqr (frame (square 50 "solid" "red")))
-(define blue-sqr (frame (square 50 "solid" "blue")))
-(define yellow-sqr (frame (square 50 "solid" "yellow")))
-(define white-sqr (frame (square 50 "solid" "white")))
+;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+;(define rock (crop 5 66 96 90 rock)
+;(define w (image-width (crop 5 66 96 90 rock)))
+;(define h (image-height (crop 5 66 96 90 rock)))
+;(define new-rock (scale/xy (/ SIZE w) (/ SIZE h) (crop 5 66 96 90 rock)))
+
+(define (grassland w)
+
+  (define (img)  (scale/xy (/ SIZE 50) (/ SIZE 50) (let ([x (random 3)])
+                                                     (cond [(= x 0) cs-grass-block]
+                                                           [(= x 1) cs-grass-block]
+                                                           [(= x 2) cs-dirt-block]))))
+    
+  (define scene (empty-scene w w "white"))
+
+  (define (f x y ); x=10 , y=10 
+    (begin
+      (set! scene (place-image (img) x y scene))
+      (let* ([boundary (- 890 (/ SIZE 2))]
+             [y-new (if (= x boundary) (+ y SIZE) y)]
+             [x-new (if (= x boundary) (/ SIZE 2) (+ x SIZE))])
+        (if (and (>= x boundary) (>= y boundary)) scene (f x-new y-new )))))
+    
+  (f (/ SIZE 2) (/ SIZE 2) ))
+
+(define table (grassland 890))
+
+(define red-sqr (scale/xy 1.5 1.5 house))
+(define blue-sqr (scale/xy 1.5 1.5 cs-character-boy))
+(define yellow-sqr  (scale/xy 1.5 1.5 new-rock))
+(define white-sqr (scale/xy 1.5 1.5  cs-grass-block))
+
+(define (random-image)
+  (let ([x (random 4)])
+    (cond [(= x 0) new-rock]
+          [(= x 1) new-tree-ugly]
+          [(= x 2) new-tree-short]
+          [(= x 3) cs-water-block])))
+           
 
 
-(define red-box (circle (/ SIZE 2) "solid" "red"))
-(define blue-box  (circle (/ SIZE 2) "solid" "blue"))
-(define yellow-box (frame (square SIZE "solid" "yellow")))
-(define white-box  (square SIZE "solid" "white"))
+(define red-box (scale/xy (/ SIZE 50) (/ SIZE 50) house))
+(define blue-box (scale/xy (/ SIZE 50) (/ SIZE 50) cs-character-boy))
+(define (yellow-box) (scale/xy (/ SIZE 50) (/ SIZE 50) (random-image ) ))
+
+(define (white-box) (scale/xy (/ SIZE 50) (/ SIZE 50) (let ([x (random 2)])
+                                                        (cond [(= x 0) cs-grass-block]
+                                                              [(= x 1) cs-dirt-block]))))
 
 (define margin-x 100)
-(define margin-y 100)
+(define margin-y 10)
 
 (define game-boundry-x (+ margin-x boundry-length-x))
 (define game-boundry-y (+ margin-y boundry-length-y))
@@ -287,10 +343,10 @@
                       blue-sqr;-2
                       yellow-sqr
                       white-sqr
-                      (text "CHOOSE-OBSTACLE" 15 "purple" )
-                      (text "CHOOSE-INITIAL_POINT" 15 "purple" )
-                      (text "CHOOSE-FINAL_POINT" 15 "purple" )
-                      (text "UNDO" 15 "purple" )
+                      (text/font "CHOOSE OBSTACLE" 20 "purple" "Gill Sans" 'swiss 'normal 'bold #f)
+                      (text/font "CHOOSE INITIAL-POINT" 20 "purple" "Gill Sans" 'swiss 'normal 'bold #f)
+                      (text/font "CHOOSE END POINT" 20 "purple" "Gill Sans" 'swiss 'normal 'bold #f)
+                      (text/font "UNDO" 20 "purple" "Gill Sans" 'swiss 'normal 'bold #f)
                       template1
                       template2
                       template3
@@ -320,8 +376,8 @@
 (define (mouse-pic w x y me)
   
   (if (mouse=? me "button-down") (cond [(and (in-range-x x) (in-range-y y))
-                                        (let* ([r (quotient (- x margin-x)  SIZE)]
-                                               [c (quotient (- y margin-y) SIZE)])
+                                        (let* ([r (floor (/ (- x margin-x)  SIZE))]
+                                               [c  (floor (/ (- y margin-y) SIZE))])
                                           (begin
                                             (2d-vector-set! grid c r (second w))
                                             (list (render-pic (list (first w) (second w) r c))
@@ -341,11 +397,12 @@
   (let* ([iter (second w)]
          [img (cond [(= iter -1) red-box]
                     [(= iter -2) blue-box]
-                    [(= iter -3) yellow-box]
-                    [(= iter 1) white-box])]
+                    [(= iter -3) (yellow-box)]
+                    [(= iter 1) (white-box)])]
          [i (+ margin-x (+ (/ SIZE 2) (* SIZE (third w))))]
          [j (+ margin-y (+ (/ SIZE 2) (* SIZE (fourth w))))])
-    (place-image img i j (first w))))
+    (begin (click-sound) (place-image img i j (first w)))
+    ))
 
 (define (return-first w)
   (first w))
@@ -404,11 +461,14 @@
 ;  (begin (iter1)
 ;         ) ;return updated vec
 ;  )
+
+
+
 (define (update i j pic)
   (let (
-        [p (+ margin-x (+ (/ SIZE 2) (* SIZE i)))]
-        [q (+ margin-y (+ (/ SIZE 2) (* SIZE j)))])
-    (place-image yellow-box q p pic)))
+        [p (+ margin-x (+ (/ SIZE 2) (* SIZE j)))]
+        [q (+ margin-y (+ (/ SIZE 2) (* SIZE i)))])
+    (place-image (yellow-box) p q pic)))
 
 (define (template-generator i j grid-i pic)
   
@@ -444,10 +504,10 @@
 ;  (vector   1 1 1 -3 1 1 1 1 -3 -3 1 1 1 1 1 1 1 1 1 1)))
 
 (define (my-rand)
-  (let ([x (random 4)])
+  (let ([x (random 3)])
     (cond [(= 0 x) 1]
           [(= 2 x) 1]
-          [(= 3 x) 1]
+          ;[(= 3 x) 1]
           [(= 1 x) -3])))
 (define (make-rand-vector COL)
   (cond [(= COL 0) #()]
@@ -465,8 +525,6 @@
 (define template4-image (template-generator 0 0 template4-grid initial-pic))
 (define template5-image (template-generator 0 0 template5-grid initial-pic))
 ;;;;;;
-
-
 
 
 

@@ -4,10 +4,16 @@
 (require 2htdp/universe)
 (require lang/posn)
 (require 2htdp/planetcute)
+;(require racket/gui)
 (provide (all-defined-out))
-(require "Algorithm.rkt")
+
+
+(require "Algorithm-hof.rkt")
 (require "graphics.rkt")
 (require "home.rkt")
+;(require "input.rkt")
+(require "sound.rkt")
+(provide controller)
 ;(require "path-generator.rkt")
 
 
@@ -110,19 +116,25 @@
 ;PATH stores the shortest path
 ;---------------------------------------------------------------displaying the shortest path
 
+
+
+
 (define (controller state1) (cond  [(equal? 'home state1) (let ([new (home)])
                                                           (begin (set! state (second new))
                                                                  (controller state))
                                                             )]
                                ;    [(equal? 'graphics state1) (begin (bb))]))
-                                   [(equal? 'graphics state1) (begin (let ([world-state1 (bb)])
+                                   
+                                                                                                
+                                   [(equal? 'graphics state1) (begin (sound)
+                                                                (let ([world-state1 (bb)])
                                                                        (set! world-state world-state1))
                                                                      (set! gr grid)
                                                                      (flat-grid gr)
                                                                      (define val (astar))
                                                                      ;w(set! path-coordinates PATH)
                                                                      (set! picture (car world-state))
-                                                                     (if (equal? val "found") (path)
+                                                                     (if (equal? val "found") (begin (pathsound) (path))
                                                                          (cons val (path)))
                                                                      ;(path)
                                                                     ; val
@@ -130,8 +142,12 @@
                                                                      
 
 
+(controller 'home)
 
-
+;(define (iter)
+;  (if (and (> row 0) (> col 0)) (begin (row-col-set)
+;                                       (controller 'graphics))
+;      (controller 'input)))
 
 
 

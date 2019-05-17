@@ -13,6 +13,7 @@
 (define cs-stone-block (crop 3 27 51 53 (scale/xy 13/21 50/88 stone-block)))
 
 (define cs-water-block (crop 3 27 51 53 (scale/xy 13/21 50/88 water-block)))
+(define new-water-block (place-image cs-water-block 25 25 cs-grass-block))
 
 (define cs-plain-block (crop 3 27 51 53 (scale/xy 13/21 50/88 plain-block)))
 
@@ -20,15 +21,19 @@
 
 (define cs-wall-block (crop 3 27 53 53 (scale/xy 13/21 50/88 wall-block)))
 
-(define cs-tree-short (crop 3 28 51 53 (scale/xy 12/21 47/88 tree-short)))
+(define cs-tree-short   (crop 3 28 51 53 (scale/xy 12/21 47/88 tree-short)))
+(define new-tree-short (place-image cs-tree-short 25 25 cs-dirt-block))
 
 (define cs-tree-ugly (crop 0 28 51 53 (scale/xy 11/21 47/88 tree-ugly)))
+(define new-tree-ugly (place-image cs-tree-ugly 25 25 cs-dirt-block))
 
 (define cs-character-boy (crop 7 32 51 53 (scale/xy 14/21 52/88 character-boy)))
 
 (define cs-yellow-star (crop 5 34 51 53 (scale/xy 14/21 54/88 yellow-star)))
+(define house (scale/xy (/ 50 78) (/ 50 78) (bitmap "house.jpg")))
 
 (define cs-rock (crop 3 31 50 50 (scale/xy 12/21 45/88 rock)))
+(define new-rock (place-image cs-rock 25 25 cs-grass-block))
 
 (define cs-heart (crop 0 23 51 53 (scale/xy 11/21 47/88 heart)))
 
