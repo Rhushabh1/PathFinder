@@ -1,6 +1,6 @@
 *********PATH_FINDER**********
 
-This project aims at depicting the path-finding and navigation systems used in Google Maps, Ola, Uber, etc.  
+This project aims at depicting the path-finding and navigation systems used in Google Maps, Ola, Uber, etc. 
 
 Firstly, we worked on the algorithm, which is the heart of this project.
 For this we implemented A* algorithm - modification of the famous Dijkstra Algorithm
